@@ -1,0 +1,23 @@
+{
+  "name": "@conexion-tps/cuestionario-core",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Wizard del cuestionario TPS — vertice compartido para sailor-front y proxis-next.",
+  "license": "UNLICENSED",
+  "sideEffects": false,
+  "main": "src/index.ts",
+  "files": ["src"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "next": ">=15",
+    "lucide-react": ">=0.3"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": false },
+    "next": { "optional": false },
+    "lucide-react": { "optional": true }
+  }
+}
