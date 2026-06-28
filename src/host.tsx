@@ -1,12 +1,12 @@
 'use client'
 //
-// ADAPTADOR del host. El wizard NO conoce axios/localStorage/router/Link del host: consume
+// ADAPTADOR del host. El wizard NO conoce axios/localStorage/router del host: consume
 // todo via <HostProvider adapter={...}>. Así sailor-front y proxis-next montan el mismo wizard
 // inyectando su propia implementación. El wizard no debe importar @/core/*, @/context/*,
 // next/navigation ni next/link.
 //
 import { createContext, useContext } from 'react'
-import type { ComponentType, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export interface HostSession {
   asesor: string
@@ -24,8 +24,6 @@ export interface HostAdapter {
   getSession: () => HostSession | null
   /** True mientras el host resuelve la sesión (gating, igual que authLoading). */
   loading: boolean
-  /** Componente Link del host (recibe { href, children }). */
-  Link: ComponentType<{ href: string; children: ReactNode }>
   /** Navegación entre pantallas del wizard (el host mapea el path a su estructura de rutas). */
   navigate: (path: string) => void
   /** El wizard terminó (Módulo D → listo). */
