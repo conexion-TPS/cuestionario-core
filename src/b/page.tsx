@@ -81,14 +81,19 @@ export default function ModuloB() {
   function guardarYSalir() {
     if (guardando || listo) return
     setGuardando(true)
-    try {
-      const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
-      if (sesion.cuestionario_id && Object.keys(respuestas).length) {
-        const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
-        api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas }).catch(() => {})
-      }
-    } catch { /* best-effort */ }
-    setTimeout(() => onExit(), 2000)
+    let yaSalio = false
+    let timer: ReturnType<typeof setTimeout>
+    function salirOnce() { if (!yaSalio) { yaSalio = true; clearTimeout(timer); onExit() } }
+    timer = setTimeout(salirOnce, 2000)
+    ;(async () => {
+      try {
+        const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
+        if (sesion.cuestionario_id && Object.keys(respuestas).length) {
+          const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
+          await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+        }
+      } catch { salirOnce() }
+    })()
   }
 
   if (!items.length) return <LayoutVacio />
