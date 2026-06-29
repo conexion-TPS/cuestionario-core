@@ -83,14 +83,14 @@ export default function ModuloA() {
     onExit()
   }
 
-  async function guardarYSalir() {
+  function guardarYSalir() {
     if (guardando || listo) return
     setGuardando(true)
     try {
       const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
       if (sesion.cuestionario_id && Object.keys(respuestas).length) {
         const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
-        await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+        api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas }).catch(() => {})
       }
     } catch { /* best-effort */ }
     setTimeout(() => onExit(), 2000)
@@ -103,7 +103,7 @@ export default function ModuloA() {
   const progreso = ((step) / total) * 100
 
   return (
-    <Pantalla modulo="A" step={step + 1} total={total} progreso={progreso} onExit={salir}>
+    <Pantalla modulo="A" step={step + 1} total={total} progreso={progreso}>
       <div style={{ marginBottom: 12 }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8a8885', textAlign: 'center', marginBottom: 20 }}>
           ¿Cuál de los dos extremos te describe mejor?
@@ -142,8 +142,8 @@ export default function ModuloA() {
 
         {/* Leyenda */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, padding: '0 4px' }}>
-          <span style={{ fontSize: 15, color: '#000' }}>1 = muy parecido al texto de arriba</span>
-          <span style={{ fontSize: 15, color: '#000' }}>4 = muy parecido al texto de abajo</span>
+          <span style={{ fontSize: 12, color: '#000' }}>1 = muy parecido al texto de arriba</span>
+          <span style={{ fontSize: 12, color: '#000' }}>4 = muy parecido al texto de abajo</span>
         </div>
       </div>
       {!listo && (

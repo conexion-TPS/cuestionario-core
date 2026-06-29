@@ -96,14 +96,14 @@ export default function ModuloC() {
     onExit()
   }
 
-  async function guardarYSalir() {
+  function guardarYSalir() {
     if (guardando) return
     setGuardando(true)
     try {
       const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
       if (sesion.cuestionario_id && Object.keys(respuestas).length) {
         const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
-        await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+        api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas }).catch(() => {})
       }
     } catch { /* best-effort */ }
     setTimeout(() => onExit(), 2000)
@@ -135,12 +135,6 @@ export default function ModuloC() {
             {grupo + 1}/{totalGrupos}
           </div>
         </div>
-        <button onClick={salir} style={{
-          background: 'none', border: 'none', color: 'rgba(255,255,255,0.55)', cursor: 'pointer',
-          fontFamily: 'inherit', fontSize: 12, padding: '0 0 8px', textDecoration: 'underline',
-        }}>
-          Guardar y retomar más tarde
-        </button>
         <div style={{ height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 2 }}>
           <div style={{ height: '100%', background: '#cbf135', borderRadius: 2, width: `${progreso}%`, transition: 'width 0.4s ease' }} />
         </div>
@@ -177,8 +171,8 @@ export default function ModuloC() {
                 })}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                <span style={{ fontSize: 14, color: '#000' }}>Muy en desacuerdo</span>
-                <span style={{ fontSize: 14, color: '#000' }}>Muy de acuerdo</span>
+                <span style={{ fontSize: 12, color: '#000' }}>Muy en desacuerdo</span>
+                <span style={{ fontSize: 12, color: '#000' }}>Muy de acuerdo</span>
               </div>
             </div>
           ))}
