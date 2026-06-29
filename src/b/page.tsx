@@ -14,6 +14,7 @@ export default function ModuloB() {
   const [step,       setStep]       = useState(0)
   const [respuestas, setRespuestas] = useState<Record<string, number>>({})
   const [listo,      setListo]      = useState(false)
+  const [guardando,  setGuardando]  = useState(false)
 
   useEffect(() => {
     if (authLoading) return
@@ -75,6 +76,19 @@ export default function ModuloB() {
   function salir() {
     if (session) guardarProgresoTps(session.asesor, 35)
     onExit()
+  }
+
+  async function guardarYSalir() {
+    if (guardando || listo) return
+    setGuardando(true)
+    try {
+      const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
+      if (sesion.cuestionario_id && Object.keys(respuestas).length) {
+        const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
+        await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+      }
+    } catch { /* best-effort */ }
+    setTimeout(() => onExit(), 2000)
   }
 
   if (!items.length) return <LayoutVacio />
@@ -141,6 +155,20 @@ export default function ModuloB() {
             <span style={{ fontSize: 15, color: '#000' }}>4 = muy parecido al texto de abajo</span>
           </div>
         </div>
+        {!listo && (
+          <button onClick={guardarYSalir} disabled={guardando} style={{
+            marginTop: 12, width: '100%', padding: '13px 0',
+            background: guardando ? '#1d6fd4' : '#fff',
+            border: `1.5px solid ${guardando ? '#1d6fd4' : '#d1cec9'}`,
+            borderRadius: 12, fontSize: 14, fontWeight: 600,
+            cursor: guardando ? 'not-allowed' : 'pointer',
+            color: guardando ? '#fff' : '#6b6865',
+            transition: 'all 0.2s', fontFamily: 'inherit',
+            marginBottom: 32,
+          }}>
+            {guardando ? '✓ Guardado' : 'Guardar y retomar más tarde'}
+          </button>
+        )}
       </div>
     </div>
   )

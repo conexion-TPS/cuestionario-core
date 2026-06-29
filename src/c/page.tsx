@@ -22,6 +22,7 @@ export default function ModuloC() {
   const [items,      setItems]      = useState<Item[]>([])
   const [grupo,      setGrupo]      = useState(0)    // 0–4 (5 grupos de 5)
   const [respuestas, setRespuestas] = useState<Record<string, number>>({})
+  const [guardando,  setGuardando]  = useState(false)
   // Consentimiento §5.5 (capa 3 — SOLO captura del dato sensible f4; independiente de
   // términos [capa 1] y de A/B [capa 2]). undefined=cargando, null=aún no decide, true/false=decidido.
   // Gobierna SOLO si f4 se persiste, vía el flag `consentimiento` del payload a tps-evaluar.
@@ -93,6 +94,19 @@ export default function ModuloC() {
   function salir() {
     if (session) guardarProgresoTps(session.asesor, 50 + Math.round((grupo / totalGrupos) * 35))
     onExit()
+  }
+
+  async function guardarYSalir() {
+    if (guardando) return
+    setGuardando(true)
+    try {
+      const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
+      if (sesion.cuestionario_id && Object.keys(respuestas).length) {
+        const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
+        await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+      }
+    } catch { /* best-effort */ }
+    setTimeout(() => onExit(), 2000)
   }
 
   // Persiste la decisión §5.5 en la sesión local (la lee cuestionario/d al enviar a tps-evaluar).
@@ -180,6 +194,18 @@ export default function ModuloC() {
           marginBottom: 32,
         }}>
           {grupo < totalGrupos - 1 ? 'Continuar →' : 'Ir al último módulo →'}
+        </button>
+        <button onClick={guardarYSalir} disabled={guardando} style={{
+          marginTop: 8, width: '100%', padding: '13px 0',
+          background: guardando ? '#1d6fd4' : '#fff',
+          border: `1.5px solid ${guardando ? '#1d6fd4' : '#d1cec9'}`,
+          borderRadius: 12, fontSize: 14, fontWeight: 600,
+          cursor: guardando ? 'not-allowed' : 'pointer',
+          color: guardando ? '#fff' : '#6b6865',
+          transition: 'all 0.2s', fontFamily: 'inherit',
+          marginBottom: 32,
+        }}>
+          {guardando ? '✓ Guardado' : 'Guardar y retomar más tarde'}
         </button>
       </div>
     </div>

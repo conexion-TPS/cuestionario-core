@@ -16,6 +16,7 @@ export default function ModuloD() {
   const [respuestas, setRespuestas] = useState<Record<string, string>>({})
   const [enviando,   setEnviando]   = useState(false)
   const [listo,      setListo]      = useState(false)
+  const [guardando,  setGuardando]  = useState(false)
 
   useEffect(() => {
     if (authLoading) return
@@ -125,6 +126,19 @@ export default function ModuloD() {
     onExit()
   }
 
+  async function guardarYSalir() {
+    if (guardando || enviando || listo) return
+    setGuardando(true)
+    try {
+      const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
+      if (sesion.cuestionario_id && Object.keys(respuestas).length) {
+        const filas = Object.entries(respuestas).map(([pregunta_id, val]) => ({ pregunta_id, respuesta: String(val) }))
+        await api.post('/api/cuestionario/progreso-modulos', { cuestionario_id: sesion.cuestionario_id, respuestas: filas })
+      }
+    } catch { /* best-effort */ }
+    setTimeout(() => onExit(), 2000)
+  }
+
   if (!items.length) return <div style={{ minHeight: '100vh', background: '#f5f3ef' }} />
 
   const item     = items[step]
@@ -205,6 +219,20 @@ export default function ModuloD() {
           <div style={{ textAlign: 'center', marginTop: 32, color: '#8a8885', fontSize: 13 }}>
             Calculando tu perfil...
           </div>
+        )}
+        {!enviando && !listo && (
+          <button onClick={guardarYSalir} disabled={guardando} style={{
+            marginTop: 16, width: '100%', padding: '13px 0',
+            background: guardando ? '#1d6fd4' : '#fff',
+            border: `1.5px solid ${guardando ? '#1d6fd4' : '#d1cec9'}`,
+            borderRadius: 12, fontSize: 14, fontWeight: 600,
+            cursor: guardando ? 'not-allowed' : 'pointer',
+            color: guardando ? '#fff' : '#6b6865',
+            transition: 'all 0.2s', fontFamily: 'inherit',
+            marginBottom: 32,
+          }}>
+            {guardando ? '✓ Guardado' : 'Guardar y retomar más tarde'}
+          </button>
         )}
       </div>
     </div>
