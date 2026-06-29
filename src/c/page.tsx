@@ -163,8 +163,8 @@ export default function ModuloC() {
                 })}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                <span style={{ fontSize: 9, color: '#b8b4af' }}>Muy en desacuerdo</span>
-                <span style={{ fontSize: 9, color: '#b8b4af' }}>Muy de acuerdo</span>
+                <span style={{ fontSize: 14, color: '#000' }}>Muy en desacuerdo</span>
+                <span style={{ fontSize: 14, color: '#000' }}>Muy de acuerdo</span>
               </div>
             </div>
           ))}

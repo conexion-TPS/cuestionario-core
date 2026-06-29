@@ -137,8 +137,8 @@ export default function ModuloB() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, padding: '0 4px' }}>
-            <span style={{ fontSize: 10, color: '#8a8885' }}>1 = muy parecido al texto de arriba</span>
-            <span style={{ fontSize: 10, color: '#8a8885' }}>4 = muy parecido al texto de abajo</span>
+            <span style={{ fontSize: 15, color: '#000' }}>1 = muy parecido al texto de arriba</span>
+            <span style={{ fontSize: 15, color: '#000' }}>4 = muy parecido al texto de abajo</span>
           </div>
         </div>
       </div>
