@@ -64,6 +64,16 @@ export default function CuestionarioLanding() {
       }
       localStorage.setItem('tps_preguntas', JSON.stringify(estructura))
       const seed = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
+      // Aislar por asesor: si el seed guardado es de otro asesor, descartarlo antes de sembrar.
+      if (seed.asesor && seed.asesor !== session!.asesor) {
+        delete seed.respuestas_a
+        delete seed.respuestas_b
+        delete seed.respuestas_c
+        delete seed.respuestas_d
+        delete seed.completado
+        delete seed.cuestionario_id
+        if ('estado_perfil' in seed) delete seed.estado_perfil
+      }
       seed.asesor = session!.asesor
       seed.cuestionario_id = cuestionarioId
       if (!seed.respuestas_a) seed.respuestas_a = {}
