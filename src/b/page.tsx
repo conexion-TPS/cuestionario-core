@@ -26,13 +26,18 @@ export default function ModuloB() {
     const sesion    = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
     const prevResp  = sesion.respuestas_b || {}
 
-    setItems(preguntas.B.map((p: any) => ({
+    const localItems = preguntas.B.map((p: any) => ({
       id: p.id, polo_izq: p.opciones?.polo_izq ?? '', polo_der: p.opciones?.polo_der ?? '',
-    })))
+    }))
+    setItems(localItems)
     setRespuestas(prevResp)
 
-    if (Object.keys(prevResp).length >= preguntas.B.length) {
+    const primerSinRespuesta = localItems.findIndex(it => !(it.id in prevResp))
+    if (primerSinRespuesta === -1) {
+      setListo(true)
       router.replace('/cuestionario/c')
+    } else if (primerSinRespuesta > 0) {
+      setStep(primerSinRespuesta)
     }
   }, [authLoading, session])
 

@@ -28,16 +28,20 @@ export default function ModuloA() {
     const sesion = JSON.parse(localStorage.getItem('tps_evaluacion') || '{}')
     const prevRespuestas = sesion.respuestas_a || {}
 
-    setItems(preguntas.A.map((p: any) => ({
+    const localItems = preguntas.A.map((p: any) => ({
       id:       p.id,
       polo_izq: p.opciones?.polo_izq ?? '',
       polo_der: p.opciones?.polo_der ?? '',
-    })))
+    }))
+    setItems(localItems)
     setRespuestas(prevRespuestas)
 
-    // Si ya respondió todos, ir directo al siguiente
-    if (Object.keys(prevRespuestas).length >= preguntas.A.length) {
+    const primerSinRespuesta = localItems.findIndex(it => !(it.id in prevRespuestas))
+    if (primerSinRespuesta === -1) {
+      setListo(true)
       router.replace('/cuestionario/b')
+    } else if (primerSinRespuesta > 0) {
+      setStep(primerSinRespuesta)
     }
   }, [authLoading, session])
 
