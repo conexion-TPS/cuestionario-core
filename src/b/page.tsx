@@ -34,7 +34,6 @@ export default function ModuloB() {
 
     const primerSinRespuesta = localItems.findIndex((it: { id: string }) => !(it.id in prevResp))
     if (primerSinRespuesta === -1) {
-      setListo(true)
       router.replace('/cuestionario/c')
     } else if (primerSinRespuesta > 0) {
       setStep(primerSinRespuesta)
