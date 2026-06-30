@@ -36,7 +36,7 @@ export default function ModuloA() {
     setItems(localItems)
     setRespuestas(prevRespuestas)
 
-    const primerSinRespuesta = localItems.findIndex(it => !(it.id in prevRespuestas))
+    const primerSinRespuesta = localItems.findIndex((it: { id: string }) => !(it.id in prevRespuestas))
     if (primerSinRespuesta === -1) {
       setListo(true)
       router.replace('/cuestionario/b')
