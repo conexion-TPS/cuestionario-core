@@ -213,7 +213,7 @@ export default function CuestionarioLanding() {
               <div style={{ fontSize: 56, marginBottom: 16 }}>📋</div>
               <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Evaluación en progreso</div>
               <div style={{ fontSize: 14, color: '#8a8885', lineHeight: 1.6, marginBottom: 32 }}>
-                Dejaste la evaluación a la mitad. Puedes retomar desde donde quedaste.
+                Tienes una evaluación en progreso. Continúa desde donde quedaste.
               </div>
               <button onClick={continuar}
                 style={{ width: '100%', padding: '15px 0', background: '#cbf135', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: 'pointer', color: '#0b0a09', marginBottom: 12 }}>
