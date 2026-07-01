@@ -51,7 +51,6 @@ export default function ModuloC() {
 
   const totalGrupos = Math.ceil(items.length / GRUPO)
   const itemsGrupo  = items.slice(grupo * GRUPO, (grupo + 1) * GRUPO)
-  const grupoCompleto = itemsGrupo.every(it => respuestas[it.id] !== undefined)
   const progreso    = ((grupo * GRUPO + itemsGrupo.filter(it => respuestas[it.id] !== undefined).length) / items.length) * 100
 
   const autosaveRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -78,20 +77,15 @@ export default function ModuloC() {
     localStorage.setItem('tps_evaluacion', JSON.stringify(sesion))
     programarAutosave(sesion.cuestionario_id, nuevas)
 
-    const esUltimoGrupo = grupo === totalGrupos - 1
-    const ultimoGrupoCompleto = itemsGrupo.every(it => nuevas[it.id] !== undefined)
-    if (esUltimoGrupo && ultimoGrupoCompleto) setTimeout(() => avanzar(), 250)
-  }
-
-  function avanzar() {
-    if (!grupoCompleto) return
-    if (grupo < totalGrupos - 1) {
-      if (session) guardarProgresoTps(session.asesor, 50 + Math.round(((grupo + 1) / totalGrupos) * 35))
-      setGrupo(g => g + 1)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      if (session) guardarProgresoTps(session.asesor, 85)
-      router.push('/cuestionario/d')
+    const grupoActualCompleto = itemsGrupo.every(it => nuevas[it.id] !== undefined)
+    if (grupoActualCompleto) {
+      if (grupo < totalGrupos - 1) {
+        if (session) guardarProgresoTps(session!.asesor, 50 + Math.round(((grupo + 1) / totalGrupos) * 35))
+        setTimeout(() => { setGrupo(g => g + 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }, 250)
+      } else {
+        if (session) guardarProgresoTps(session!.asesor, 85)
+        setTimeout(() => router.push('/cuestionario/d'), 250)
+      }
     }
   }
 
@@ -187,19 +181,6 @@ export default function ModuloC() {
           ))}
         </div>
 
-        {grupo < totalGrupos - 1 && (
-          <button onClick={avanzar} disabled={!grupoCompleto} style={{
-            width: '100%', marginTop: 24, padding: '15px 0',
-            background: grupoCompleto ? '#cbf135' : '#e8e6e3',
-            border: 'none', borderRadius: 12,
-            fontSize: 15, fontWeight: 800, cursor: grupoCompleto ? 'pointer' : 'not-allowed',
-            color: grupoCompleto ? '#0b0a09' : '#8a8885',
-            transition: 'all 0.2s', fontFamily: 'inherit',
-            marginBottom: 32,
-          }}>
-            Continuar →
-          </button>
-        )}
         <button onClick={guardarYSalir} disabled={guardando} style={{
           marginTop: 8, width: '100%', padding: '13px 0',
           background: guardando ? '#1d6fd4' : '#fff',
