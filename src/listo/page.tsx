@@ -11,36 +11,37 @@ type Resultado = {
   deseabilidad_social: boolean
 }
 
+// Nombres según tipo_catalogo (fuente canónica). Si cambia el catálogo, actualizar aquí.
 const PERFILES: Record<string, { nombre: string; icon: string; color: string; desc: string }> = {
   E: {
     nombre: 'Energético',
-    icon:   '🦅',
+    icon:   '⚡',
     color:  '#e8440a',
     desc:   'Alta iniciativa + enfoque en resultados y tareas. Tu fortaleza: apertura activa de oportunidades y cierre con determinación.',
   },
   S: {
-    nombre: 'Sociable',
-    icon:   '🦚',
+    nombre: 'Magnético',
+    icon:   '🧲',
     color:  '#d4a017',
     desc:   'Alta iniciativa + alta calidez. Tu fortaleza: networking natural y capacidad de generar entusiasmo en cada interacción.',
   },
   R: {
     nombre: 'Relacional',
-    icon:   '🕊️',
+    icon:   '🤝',
     color:  '#1f6f56',
     desc:   'Alta calidez + estilo consultivo. Tu fortaleza: construcción de confianza profunda y retención de clientes a largo plazo.',
   },
   A: {
     nombre: 'Reflexivo',
-    icon:   '🦉',
+    icon:   '🔍',
     color:  '#3a5da8',
     desc:   'Alta precisión + análisis detallado. Tu fortaleza: conocimiento técnico y capacidad de generar confianza con prospectos analíticos.',
   },
   AMB: {
-    nombre: 'Ambivertido',
-    icon:   '🔄',
+    nombre: 'Equilibrio Adaptativo',
+    icon:   '⚖️',
     color:  '#6b45c8',
-    desc:   'Puntuaciones intermedias en ambos ejes. Estadísticamente, los ambivertidos superan a los extremos en producción.',
+    desc:   'Puntuaciones intermedias en ambos ejes: flexibilidad natural para adaptar tu enfoque según el interlocutor y el momento.',
   },
 }
 
